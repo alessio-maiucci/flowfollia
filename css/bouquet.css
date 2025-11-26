@@ -1,0 +1,29 @@
+.bouquet_rosa {
+    background-image: url("../immagini/carta_rosa.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bouquet_viola {
+    background-image: url("../immagini/carta_viola.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bouquet_blu {
+    background-image: url("../immagini/carta_blu.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bouquet_verde {
+    background-image: url("../immagini/carta_verde.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bouquet_giallo {
+    background-image: url("../immagini/carta_gialla.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Carrello</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="./js/slick/slick.css">
+	<link rel="stylesheet" type="text/css" href="./assets/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./js/slick/slick-theme.css">
+	<link rel="stylesheet" type="text/css" href="./css/interno.css">
+  <link rel="stylesheet" type="text/css" href="./css/interno_carrello.css">
+	<script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="./js/jquery-3.7.1.min.js"></script>	
+	<script src="./js/slick/slick.js"></script>	
+	<script src="./js/funzioni.js"></script>
+  <script src="./js/dati.js"></script>
+	
+    <style>
+      /* INIZIO Fix generale per rendere la pagina ad altezza 100% dello schermo e per far andare il footer in basso */
+      html,
+      body {
+        height: 100%;
+      }
+
+      /* Questa regola permette di abilitare la successiva */
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Questa regola spinge il footer in basso - se non avessimo messo display: flex sul body non sarebbe stato possibile applicarla */
+      .footer {
+        margin-top: auto;
+      }
+      /* FINE Fix generale per rendere la pagina ad altezza 100% dello schermo e per far andare il footer in basso */
+
+      /* INIZIO Fix nell'header */
+      .container-fluid.fissato-alto.header {
+        min-width: 0;
+        padding: 8px 12px;
+      }
+
+      .row.barra-intermedia {
+        justify-content: space-between;
+      }
+
+      .logo {
+        height: max-content;
+      }
+
+      .logo img {
+        object-fit: contain;
+        width: 40px;
+        height: 40px;
+      }
+
+      .row:after {
+        content: none;
+      }
+      /* FINE Fix nell'header */
+
+      /* INIZIO Fix nelle .column */
+      .column.side-sx,
+      .column.side-dx {
+        display: none;
+      }
+
+      .column.middle {
+        width: 100%;
+		    height:auto;
+      }
+
+      @media screen and (min-width: 1366px) {
+        .column.side-sx,
+        .column.side-dx {
+          display: block;
+          height: auto;
+        }
+
+        .column.middle {
+          width: 80%;
+		      height:auto;
+        }
+      }
+
+      .column {
+        height: max-content;
+      }
+      /* FINE Fix nelle .column */
+
+      /* INIZIO Riduciamo un pò il margine tra le slide */
+      .slick-slide {
+        margin: 0 6px;
+      }
+      /* FINE Riduciamo un pò il margine tra le slide */
+
+      /* INIZIO Facciamo vedere una frazione della slide successiva nella visuale mobile */
+      .slick-list {
+        padding: 0 20% 0 0;
+      }
+
+      @media screen and (min-width: 480px) {
+        .slick-list {
+          padding: 0;
+        }
+      }
+      /* FINE Facciamo vedere una frazione della slide successiva nella visuale mobile */
+
+    </style>
+
+</head>
+
+<body>
+
+	<div class="container-fluid fissato-alto header" id="cg-header">
+			<div class="fade collapse show" id="nascondimenu">
+				<div class="row barra-intermedia">
+					<div class="col-auto cg-main-logo logo d-flex">
+						<img src="./immagini/logo.png" height="70" width="70">
+					</div>
+					<div class="blocco-header bottoni-login" style="max-width: 18rem;">
+						<div id="id_span_loggato" class="bottone bottone-login bottone-registrazione hideme" >
+							<span style="color: white;">Benvenuto </span> <span id="id_span_username" style="color: white;">AA</span>
+						  </div>
+
+						<a href="./FlowFollia.html">
+							<button type="button" class="btn btn-primary mx-1 carrello" id="id_home" style="background-color: #4f3a23; border:#4f3a23; width: 100px;">
+								<img src="./immagini/house.svg">
+							</button>
+						</a>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	<div class="row">
+	<div class="column side-sx"></div>
+
+	<div class="column middle" style="background-color:#ffffff;">
+    <!-- Messaggio Carrello Vuoto -->
+    <div id="contenuto-carrello">
+      <div id="carrello-vuoto" style="text-align: center;">
+        <h1>Il tuo carrello è vuoto!</h1>
+        <p>Non hai ancora aggiunto nessun prodotto. Visita la <a href="./FlowFollia.html">nostra boutique</a> e scegli i tuoi fiori preferiti!</p>
+      </div>
+    </div>
+
+    <!-- Contenuto Carrello -->
+    <table id="contenuto_carrello" class="hideme" style="width: 100%; height: 100%;">
+      <tr>
+        <td style="width: 49%; vertical-align: middle; text-align: center;">
+          <!-- Articoli nel Carrello -->
+          <h2>Articoli nel carrello</h2>
+          <div id="articoli-carrello" class="scroll-section">
+
+          </div>
+        </td>
+        <td style="width: 2%;"></td> <!-- riga vuota come spazio tra gli altri due elementi -->
+        <td style="width: 49%; vertical-align: middle; text-align: center;">
+
+          <!-- Riepilogo dell'Ordine -->
+          <section id="ordine_riepilogato" class="riepilogo-ordine">
+            <h2>Riepilogo del Tuo Ordine</h2>
+            <ul>
+              <li>
+                <span>Vuoi acquistare questi prodotti ?</span>
+              </li>
+              <!-- Elementi da aggiungere -->
+            </ul>
+            <div class="totale">
+              <span>Totale Ordine:</span>
+              <span id="id_calcola_totale"></span>
+              <span>&euro;</span>
+            </div><br>
+            <button id="conferma_ordine" onclick="riepilogoOrdine()" style="cursor: pointer; border-radius: 5px; background-color: #337a41; border: transparent;">
+              <b>Conferma Ordine</b>
+            </button>
+          </section>
+
+          <!-- Modulo di Pagamento -->
+          <div id="modulo-pagamento" style="text-align: center; background-color: #c0f3c8; display: none;"><br>
+            <h3><b>Pagamento</b></h3>
+            <form onsubmit="return pagamento()">
+              <div class="form-group" style="width: 90%; margin: auto;">
+                <input type="text" class="form-control" id="indirizzo" placeholder="Indirizzo Spedizione:" required>
+              </div><br>
+              <div class="form-group" style="width: 90%; margin: auto;">
+                <input type="text" class="form-control" id="nome" placeholder="Titolare Carta:" required>
+              </div><br>
+              <div class="form-group" style="width: 90%; margin: auto;">
+                <input type="text" class="form-control" id="carta" placeholder="Numero Carta:" required>
+              </div><br>
+              <div class="form-group" style="width: 90%; margin: auto;">
+                <input type="text" class="form-control" id="scadenza" placeholder="Data Scadenza:" required>
+              </div><br>
+              <div class="form-group" style="width: 90%; margin: auto;">
+                <input type="text" class="form-control" id="cvv" placeholder="CVV:" required>
+              </div><br>
+              <div>
+                <b>
+                  <span>Totale Ordine:</span>
+                  <span id="id_calcola_totale_1"></span>
+                  <span>&euro;</span>
+                </b>
+              </div><br>
+              <button type="submit" class="btn btn-primary" style="background-color: #337a41; border: #337a41">Paga ora</button><br>
+            </form><br>
+          </div>
+        </td>
+      </tr>
+    </table>
+	</div>
+
+  <div class="column side-dx"></div>
+  </div>
+
+	<div class="footer">
+		<p><b>Alessio e Denise</b></p>
+		<p><b>numero di telefono:</b> 06-1234567 <b>email:</b> FlowFollia@gmail.com</p>
+	</div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+    const confermaOrdineBtn = document.querySelector('.riepilogo-ordine button');
+    const totaleSpan = document.getElementById('id_calcola_totale');
+
+    // Funzione per aggiornare lo stato del pulsante "Conferma Ordine"
+    function aggiornaStatoPulsante() {
+      if (totaleSpan.textContent.trim() !== '' && totaleSpan.textContent.trim() !== '0') {
+        confermaOrdineBtn.disabled = false;
+        confermaOrdineBtn.style.opacity = 1;
+      } else {
+        confermaOrdineBtn.disabled = true;
+        confermaOrdineBtn.style.opacity = 0.5;
+      }
+    }
+    aggiornaStatoPulsante();
+
+    // Aggiungere un listener per aggiornare lo stato del pulsante quando cambia il contenuto di "calcola_totale"
+    const observer = new MutationObserver(aggiornaStatoPulsante);
+    observer.observe(totaleSpan, { childList: true, subtree: true });
+    });
+
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      initDatiSlider();
+      initDatiInfo();
+      initDatiFioriera();
+      initDatiTabella();
+      checkLogin();
+      getcarrello();
+    });
+  </script>
+
+  <!--modal-->
+
+  <!--Finestra login/registrazione-->
+  <div class="modal fade" id="id_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Effettuare Login e/o Registrazione</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="id_body_modal_reglog">
+          <p>Se hai già un account effettua il Login</p>
+          <button id="id_span_login" type="button" class="btn btn-primary" style="background-color: #006b20; border:#006b20;" onclick="apri_modal_login_logreg()">Login</button>
+          <br>
+          <p>Altrimenti creane uno nuovo</p>
+          <button id="id_span_registrati" type="button" class="btn btn-secondary" style="background-color: #006b20; border:#006b20" onclick="apri_modal_registrati()">Registrati</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--modal-->
+  <div class="modal fade" id="id_modal_registrazione" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrazione</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body" style="background-image: url('./immagini/form7.jpg')">
+          <form action="./php/registrazione.php" method="post" name="registr" style="text-align: center">
+            <input type="text" name="cognome" size="30" maxlength="40" id="id_cognome_registrazione"
+              placeholder="Cognome:" required /><br /><br />
+            <input type="text" name="nome" size="30" maxlength="30" id="id_nome_registrazione" placeholder="Nome:"
+              required /><br /><br />
+            <input type="username" name="username" size="30" maxlength="15" id="id_username_registrazione"
+              placeholder="Username:" required /><br /><br />
+            <input type="email" name="email" size="30" maxlength="30" id="id_email_registrazione" placeholder="Email:"
+              required /><br /><br />
+            <input type="password" name="password" size="30" maxlength="20" id="id_password_registrazione"
+              placeholder="Password:" required /><br /><br />
+            <input type="password" name="conferma_password" size="30" maxlength="20"
+              id="id_conferma_password_registrazione" placeholder="Conferma Password:" required /><br /><br />
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_registrazione_chiudi"
+              onclick="chiudi_modal_registrati()">
+              Chiudi
+            </button>
+            <input type="button" name="REGISTRATI" class="btn btn-primary"
+              style="background-color: #006b20; border:#006b20" onclick="registrazione()" value="Registrati">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="id_modal_login" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="background-image: url('./immagini/form7.jpg')">
+          <form method="post" onsubmit="return login()" style="text-align: center;">
+            <!-- <form method="post" action="./php/login.php" style="text-align: center;"> -->
+            <input type="username" name="username" size="30" maxlength="15" id="id_username_login" placeholder="Username:" required><br><br>
+            <input type="password" name="password" size="30" maxlength="20" id="id_password_login" placeholder="Password:" required><br><br>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_login_chiudi" onclick="chiudi_modal_login()">Chiudi</button>
+            <input type="submit" class="btn btn-primary" style="background-color: #006b20; border:#006b20" name="LOGIN" value="Login">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- modal alert per gestire errori al posto di alert -->
+    <div id="id_modal_alert" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title h4" id="mySmallModalLabel"><span id="id_modal_alert_titolo"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <span id="id_modal_alert_msg"></span>
+          </div>
+        </div>
+      </div>
+    </div>  
+
+    <div class="modal fade" id="id_modal_fioricarrello" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div id="id_elenco_fiori" class="modal-body">
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+</html>

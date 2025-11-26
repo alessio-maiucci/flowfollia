@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>FlowFollia</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="./js/slick/slick.css">
+	<link rel="stylesheet" type="text/css" href="./assets/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./js/slick/slick-theme.css">
+	<link rel="stylesheet" type="text/css" href="./css/interno.css">
+	<link rel="stylesheet" type="text/css" href="./css/bouquet.css">
+	<script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="./js/jquery-3.7.1.min.js"></script>	
+	<script src="./js/slick/slick.js"></script>	
+	<script src="./js/funzioni.js"></script>
+	<script src="./js/dati.js"></script>
+	
+    <style>
+      /* INIZIO Fix generale per rendere la pagina ad altezza 100% dello schermo e per far andare il footer in basso */
+      html,
+      body {
+        height: 100%;
+      }
+
+      /* Questa regola permette di abilitare la successiva */
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Questa regola spinge il footer in basso - se non avessimo messo display: flex sul body non sarebbe stato possibile applicarla */
+      .footer {
+        margin-top: auto;
+      }
+      /* FINE Fix generale per rendere la pagina ad altezza 100% dello schermo e per far andare il footer in basso */
+
+      /* INIZIO Fix nell'header */
+      .container-fluid.fissato-alto.header {
+        min-width: 0;
+        padding: 8px 12px;
+      }
+
+      .row.barra-intermedia {
+        justify-content: space-between;
+      }
+
+      .logo {
+        height: max-content;
+      }
+
+      .logo img {
+        object-fit: contain;
+        width: 40px;
+        height: 40px;
+      }
+
+      .row:after {
+        content: none;
+      }
+      /* FINE Fix nell'header */
+
+      /* INIZIO Fix nelle .column */
+      .column.side-sx,
+      .column.side-dx {
+        display: none;
+      }
+
+      .column.middle {
+        width: 100%;
+		height:auto;
+      }
+
+      @media screen and (min-width: 1366px) {
+        .column.side-sx,
+        .column.side-dx {
+          display: block;
+          height: auto;
+        }
+
+        .column.middle {
+          width: 80%;
+		  height:auto;
+        }
+      }
+
+      .column {
+        height: max-content;
+      }
+      /* FINE Fix nelle .column */
+
+      /* INIZIO Riduciamo un pò il margine tra le slide */
+      .slick-slide {
+        margin: 0 6px;
+      }
+      /* FINE Riduciamo un pò il margine tra le slide */
+
+      /* INIZIO Facciamo vedere una frazione della slide successiva nella visuale mobile */
+      .slick-list {
+        padding: 0 20% 0 0;
+      }
+
+      @media screen and (min-width: 480px) {
+        .slick-list {
+          padding: 0;
+        }
+      }
+      /* FINE Facciamo vedere una frazione della slide successiva nella visuale mobile */
+    </style>
+
+    <style>
+        .container-fiori {
+			position: relative;
+			width: 300px;
+			height: 106px;
+			background-color: transparent;
+			top: 46px;
+			left: 4px
+        }
+
+        .button-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .button-fiori-rosa {
+			width: calc(33% - 2px);
+			height: calc(33% - 4px);
+			background-color: #e77ea6a5;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			text-align: center;
+			position: relative;
+        }
+
+		.button-fiori-viola {
+			width: calc(33% - 2px);
+			height: calc(33% - 4px);
+			background-color: #cb7ee7a5;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			text-align: center;
+			position: relative;
+        }
+
+		.button-fiori-blu {
+			width: calc(33% - 2px);
+			height: calc(33% - 4px);
+			background-color: #7eb6e7a5;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			text-align: center;
+			position: relative;
+        }
+
+		.button-fiori-verde {
+			width: calc(33% - 2px);
+			height: calc(33% - 4px);
+			background-color: #7ee7a3a5;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			text-align: center;
+			position: relative;
+        }
+
+		.button-fiori-giallo {
+			width: calc(33% - 2px);
+			height: calc(33% - 4px);
+			background-color: #e7cb7ea5;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			text-align: center;
+			position: relative;
+        }
+
+		.container-fiori {
+        position: relative;
+        width: 170px;
+        height: 170px;
+        background-color: transparent;
+		top: 18px;
+    	left: 69px;
+        }
+
+		.button-fiori-invisibile {
+			width: calc(14% - -7px);
+    		height: calc(42% - -4px);
+            background-color: transparent; 
+            color: transparent; 
+            border: none; 
+            border-radius: 5px; 
+             
+        }
+
+		.fiore-placeholder{
+			height: 50px;
+			width: 50px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			right: 0;
+			bottom: 0;
+			
+		}
+    </style>
+
+<script>
+	var cp_butt;
+	var to_butt;
+	function allowDrop(ev) {
+	  ev.preventDefault();
+	}
+
+	function drag(ev) {
+	  //cp_butt=$('#'+ev.target.id).closest('button').html();
+	  cp_butt = $("#" + ev.target.id).attr("src");
+	  console.log("drag " + cp_butt);
+
+	  //  ev.dataTransfer.setData("text", ev.target.id);
+	}
+
+	function drop(ev) {
+	  console.log("drop " + ev.target.id);
+	  $("#" + ev.target.id).attr("src", cp_butt);
+	  ev.preventDefault();
+	}
+  </script>
+	
+</head>
+
+<body>
+	<div class="container-fluid fissato-alto header" id="cg-header">
+			<div class="fade collapse show" id="nascondimenu">
+				<div class="row barra-intermedia">
+					<div class="col-auto cg-main-logo logo d-flex">
+						<img src="./immagini/logo.png" height="70" width="70">
+					</div>
+					<div class="blocco-header bottoni-login" style="max-width: 18rem;">
+						<div id="id_span_loggato" class="bottone bottone-login bottone-registrazione hideme" >
+							<span style="color: white;">Benvenuto </span> <span id="id_span_username" style="color: white;">AA</span>
+						  </div>
+						<button type="button" class="btn btn-primary mx-1 hideme" id="id_span_logout" style="background-color: #4f3a23; border:#4f3a23" onclick="logout()">Logout</button>	
+						<button type="button" class="btn btn-primary mx-1" id="id_span_login" style="background-color: #4f3a23; border:#4f3a23" onclick="apri_modal_login()">Login</button>
+						<button type="button" class="btn btn-primary mx-1" id="id_span_registrati" style="background-color: #4f3a23; border:#4f3a23" onclick="apri_modal_registrati()">Registrati</button>
+						<a href="./Carrello.html">
+							<button type="button" class="btn btn-primary mx-1 carrello" id="id_carrello" style="background-color: #4f3a23; border:#4f3a23;">
+								<img src="./immagini/cart3.svg">
+							</button>
+						</a>
+					</div>
+					
+				</div>
+			</div>
+	</div>
+
+	<div class="row">
+	<div class="column side-sx"></div>
+	<div class="column middle" style="background-color:#ffffff;">
+		
+		<div class="row-2">
+			<div class="column side-sx-2"><img src="./immagini/ghirigoro_fioriera_sx.JPG" style="float:left;"></div>
+			<div class="column middle-2"><h2 style="margin-top: 20px; ">Crea il tuo bouquet</h2></div>
+			<div class="column side-dx-2"><img src="./immagini/ghirigoro_fioriera_dx.JPG" style="float:right;"></div>
+		</div>
+			<div class="regular slider" id="id_slider_bouquet">
+				<!--riempito dalle funzioni di fill-->
+			</div>
+
+			<div class="scelta_bouquet hideme" id="id_scelta_bouquet">
+				<div class="row-5">
+					<div class="column" style="background-color: #ffffff">
+					  <!-- inizio placeholder bouquet -->
+					  <div id="id_mostra_bouquet_rosa" style="height: 300px; width: 300px" class="hideme">
+						<div class="container-fiori">
+							<div class="button-container" id="button_container">
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r1" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r2" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r3" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r4" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r5" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r6" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r7" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r8" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r9" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r10" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r11" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-rosa" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_r12" name="bouquet_rosa" src="./immagini/flower1.svg" width="100%"></button>
+							</div>
+						</div>
+					  </div>
+					<div id="id_mostra_bouquet_viola" style="height: 300px; width: 300px" class="hideme">
+						<div class="container-fiori">
+							<div class="button-container" id="button_container">
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v1" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v2" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v3" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v4" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v5" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v6" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v7" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v8" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v9" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v10" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v11" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-viola" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_v12" name="bouquet_viola" src="./immagini/flower1.svg" width="100%"></button>
+							</div>
+						</div>
+					  </div>
+				<div id="id_mostra_bouquet_blu" style="height: 300px; width: 300px" class="hideme">
+					<div class="container-fiori">
+						<div class="button-container" id="button_container">
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b1" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b2" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b3" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b4" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b5" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b6" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b7" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b8" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b9" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b10" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b11" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+							<button class="btn button-fiori-blu" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_b12" name="bouquet_blu" src="./immagini/flower1.svg" width="100%"></button>
+						</div>
+					</div>
+					  </div>
+					  <div id="id_mostra_bouquet_verde" style="height: 300px; width: 300px" class="hideme">
+						<div class="container-fiori">
+							<div class="button-container" id="button_container">
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr1" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr2" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr3" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr4" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr5" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr6" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr7" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr8" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr9" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr10" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr11" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-verde" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_vr12" name="bouquet_verde" src="./immagini/flower1.svg" width="100%"></button>
+							</div>
+						</div>
+					  </div>
+					  <div id="id_mostra_bouquet_giallo" style="height: 300px; width: 300px" class="hideme">
+						<div class="container-fiori">
+							<div class="button-container" id="button_container">
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g1" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g2" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g3" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g4" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g5" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g6" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g7" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g8" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g9" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g10" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g11" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+								<button class="btn button-fiori-giallo" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="id_img_to_g12" name="bouquet_giallo" src="./immagini/flower1.svg" width="100%"></button>
+							</div>
+						</div>
+					  </div>
+		
+					  <!-- fine placeholder bouquet -->	
+					</div>
+				</div>
+				<div class="row-3">
+					<div id="tabella_bouquet"
+					  class="column w-100 griglia-fiori"
+					  style="background-color: #ffffff">
+					  <!-- riempito dalle funzioni di fill-->
+					</div>
+				  </div>
+				<div class="row-4">
+						<div class="pulsanti" style="text-align: center; margin-top: 20px;">
+							<a href="./CreaBouquet.html"><button type="button" class="btn btn-primary mx-1" style="background-color: rgb(114, 114, 114); border: rgb(114, 114, 114);">Indietro</button></a>
+							<a href="javascript:void()"><button type="button" class="btn btn-primary" style="background-color: #006b20; border: #006b20" onclick="inserisciFlowfolliaCarrello('C')">Aggiungi al carrello</button></a>
+						</div>			
+				</div>
+			</div>
+			
+			<div class="container" id="container_indietro" style="text-align: center;">
+				<a href="./FlowFollia.html"><button type="button" class="btn btn-primary mx-1" style="background-color: rgb(114, 114, 114); border: rgb(114, 114, 114); margin-top: 10px;">Indietro</button></a>
+				<br>
+				<br>
+				<h6 style="font-family: camellia;">Prova delle composizioni gia' fatte da noi</h6>
+				<a href="./Bouquet_pronti.html"><button type="button" class="btn btn-primary mx-1" style="background-color: rgb(64, 173, 112); border: rgb(64, 173, 112); margin-top: 10px;">Bouquet pronti</button></a>
+			</div>
+
+	</div>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			initDatiFioriera();
+			initDatiTabella();
+			fillSlider1('id_slider_bouquet',2);
+			fillTabella('tabella_bouquet',2);
+			getcarrello();
+			checkLogin();
+			$(".regular").slick({
+				dots: true,
+				infinite: true,
+				slidesToShow: 5,
+				slidesToScroll: 5,
+				responsive: [
+				{
+					breakpoint: 1366,
+					settings: {
+					slidesToShow: 4,
+					slidesToScroll: 4,
+					},
+				},
+				{
+					breakpoint: 1024,
+					settings: {
+					slidesToShow: 3,
+					slidesToScroll: 3,
+					},
+				},
+				{
+					breakpoint: 768,
+					settings: {
+					slidesToShow: 2,
+					slidesToScroll: 2,
+					},
+				},
+				{
+					breakpoint: 480,
+					settings: {
+					dots: false,
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					},
+				},
+				],
+			});
+
+		});
+	</script>
+
+	<div class="column side-dx"></div>
+	</div>
+	<div class="footer">
+		<p><b>Alessio e Denise</b></p>
+		<p><b>numero di telefono:</b> 06-1234567 <b>email:</b> FlowFollia@gmail.com</p>
+	</div>
+
+	<!--modal-->
+	<div class="modal fade" id="id_modal_registrazione" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Registrazione</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+
+			<div class="modal-body" style="background-image: url('./immagini/form7.jpg');">
+				<form action="./php/registrazione.php" method="post" name="registr" style="text-align: center;">
+					<input type="text" name="cognome" size="30" maxlength="40" id="id_cognome_registrazione" placeholder="Cognome:" required><br><br>
+					<input type="text" name="nome" size="30" maxlength="30" id="id_nome_registrazione" placeholder="Nome:" required><br><br>
+					<input type="username" name="username" size="30" maxlength="15" id="id_username_registrazione" placeholder="Username:" required><br><br>
+					<input type="email" name="email" size="30" maxlength="30" id="id_email_registrazione" placeholder="Email:" required><br><br>
+					<input type="password" name="password" size="30" maxlength="20" id="id_password_registrazione" placeholder="Password:" required><br><br>
+					<input type="password" name="conferma_password" size="30" maxlength="20" id="id_conferma_password_registrazione" placeholder="Conferma Password:" required><br><br>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_registrazione_chiudi" onclick="chiudi_modal_registrati()">Chiudi</button>
+					<input type="submit" class="btn btn-primary" style="background-color: #006b20; border:#006b20" name="REGISTRATI" value="registrati">
+				</form>
+			</div>
+		  </div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="id_modal_login" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Login</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body" style="background-image: url('./immagini/form7.jpg')">
+			  <form method="post" onsubmit="return login()" style="text-align: center;">
+				<!-- <form method="post" action="./php/login.php" style="text-align: center;"> -->
+				<input type="username" name="username" size="30" maxlength="15" id="id_username_login" placeholder="Username:" required><br><br>
+				<input type="password" name="password" size="30" maxlength="20" id="id_password_login" placeholder="Password:" required><br><br>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_login_chiudi" onclick="chiudi_modal_login()">Chiudi</button>
+				<input type="submit" class="btn btn-primary" style="background-color: #006b20; border:#006b20" name="LOGIN" value="Login">
+			  </form>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	
+		<!-- modal alert per gestire errori al posto di alert -->
+		<div id="id_modal_alert" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h5 class="modal-title h4" id="mySmallModalLabel"><span id="id_modal_alert_titolo"></span></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true"></span>
+				</button>
+			  </div>
+			  <div class="modal-body">
+				<span id="id_modal_alert_msg"></span>
+			  </div>
+			</div>
+		  </div>
+		</div>  
+ 
+</body>
+</html>

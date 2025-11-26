@@ -1,0 +1,29 @@
+.fioriera_4 {
+    background-image: url("../immagini/vaso_quadrato_alto.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fioriera_9 {
+    background-image: url("../immagini/vaso_quadrato_grande_alto.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fioriera_6 {
+    background-image: url("../immagini/vaso_rettangolare_alto_horiz.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fioriera_1 {
+    background-image: url("../immagini/vaso_tondo_piccolo_alto.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fioriera_5 {
+    background-image: url("../immagini/vaso_tondo_grande_alto.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}

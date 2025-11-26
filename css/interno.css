@@ -1,0 +1,494 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.hideme {
+  display: none;
+}
+
+.header {
+  background-color: #8c6b49;
+  background-size: cover;
+}
+
+.column {
+  float: left;
+  padding: 10px;
+  height: 600px;
+}
+
+.colonna {
+  float: left;
+  padding: 10px;
+  width: 50%;
+  height: 300px;
+}
+
+.column.side-dx {
+  background-image: url("../immagini/fiore_disegno2_dx.jpg");
+  background-repeat: repeat-y;
+  background-size: auto;
+  background-position: center;
+  width: 10%;
+}
+
+.column.side-sx {
+  background-image: url("../immagini/fiore_disegno2_sx.jpg");
+  background-repeat: repeat-y;
+  background-size: auto;
+  background-position: center;
+  width: 10%;
+}
+
+.column.middle {
+  width: 80%;
+}
+
+.row-1 {
+  width: 100%;
+  height: 80%;
+}
+
+.column.side-dx-1 {
+  width: 40%;
+}
+
+.column.side-sx-1 {
+  width: 40%;
+}
+
+.column.middle-1 {
+  width: 20%;
+  background-color: #ffffff;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.row-2 {
+  width: 100%;
+  display: flex;
+}
+
+.column.side-dx-2 {
+  width: 10%;
+  height: 100%;
+}
+
+.column.side-sx-2 {
+  width: 10%;
+  height: 100%;
+}
+
+.column.middle-2 {
+  width: 80%;
+  text-align: center;
+  height: 100%;
+  font-family: Camellia;
+}
+
+.row-3 {
+  width: 100%;
+}
+
+.row-4 {
+  width: 100%;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.row-5 {
+  width: 100%;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.griglia-fiori {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+@font-face {
+  font-family: Camellia;
+  src: url(../fonts/CamelliaSignatureDEMO!-DEMO!.otf);
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.footer {
+  background-color: #8c6b49;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  font-size: larger;
+}
+
+.border {
+  border: 1px solid black;
+  padding: 1px;
+  height: 50%;
+}
+
+@media (max-width: 600px) {
+  .column.side,
+  .column.middle {
+    width: 100%;
+  }
+}
+
+.slider {
+  width: 80%;
+  margin: 30px auto;
+}
+
+.slick-slide {
+  margin: 0px 20px;
+}
+
+.slick-slide img {
+  width: 100%;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+
+.slick-slide {
+  transition: all ease-in-out 0.3s;
+  opacity: 0.2;
+}
+
+.slick-active {
+  opacity: 0.5;
+}
+
+.slick-current {
+  opacity: 1;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+button {
+  background-color: #56290900;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.login-carrello {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+}
+
+.barra-di-scelta {
+  background-image: url("../immagini/legno.jpg");
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+}
+
+.barra-insegna-fioriera {
+  background-image: url("../immagini/ghirigoro_fioriera.jpg");
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  height: 100px;
+}
+
+.barra-insegna-bouquet {
+  background-image: url("../immagini/ghirigoro_bouquet.jpg");
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  height: 100px;
+}
+
+.container-fluid {
+  min-width: 1024px;
+}
+
+.container-fluid.fissato-alto .row {
+  margin: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.row {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+  height: 100%;
+}
+
+.barra-superiore {
+  background-color: #0000006e;
+  font-family: sans-serif;
+}
+
+.barra-intermedia {
+  background: var(--intermediate-bar-bg-color);
+  color: var(--intermediate-bar-text-color);
+}
+
+.info-utili {
+  flex-basis: 90%;
+  max-width: 90%;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  font-size: 0.85rem;
+}
+
+.barra-superiore {
+  background: var(--topbar-bg-color);
+  color: var(--topbar-text-color);
+  padding-top: 2px;
+  padding-bottom: 2px;
+  justify-content: space-between;
+}
+
+.barra-superiore .blocco-header {
+  font-size: 13px;
+  padding-right: 1rem;
+}
+
+.barra-superiore .blocco-header:not(:first-child) {
+  padding-left: 1rem;
+}
+
+.logo {
+  padding-top: 0;
+  padding-bottom: 0;
+  flex-basis: 25%;
+  height: 35px;
+}
+
+.logo a {
+  position: absolute;
+  top: -5px;
+  height: 74px;
+}
+
+.logo img {
+  height: 100%;
+}
+
+.login-header {
+  font-size: 14px;
+  flex-basis: 40%;
+  margin-right: 0;
+  margin-left: auto;
+  line-height: 1.14;
+  align-self: center;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.blocco-header.login-form-header.margine-su-1x {
+  margin-top: 0;
+  display: -ms-grid;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-start;
+}
+
+.login-header .blocco-header {
+  padding-right: 1rem;
+  padding-left: 1rem;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  align-self: center;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+}
+
+.login-header .blocco-header {
+  align-items: stretch;
+}
+
+.bottone {
+  border-radius: 0.25rem;
+  line-height: 2;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.bottoni-login {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1 1 50%;
+}
+
+.bottone-login,
+.bottone-popup-login-visionato {
+  background: var(--login-btn-bg-color);
+  color: var(--login-btn-text-color) !important;
+  text-align: center;
+}
+
+.bottone-registrazione {
+  background: var(--signup-btn-bg-color);
+  color: var(--signup-btn-text-color) !important;
+}
+
+.bottone-login {
+  margin-bottom: 10px;
+}
+
+.bottone-registrazione {
+  background-image: linear-gradient(
+    to bottom,
+    var(--signup-btn-bg-color) 0%,
+    #09a2ce
+  );
+  border-color: #5f8ea9;
+}
+
+.login-form-header div {
+  margin-bottom: 0;
+}
+
+.margine-dx,
+.margine-destra {
+  margin-right: 1rem;
+}
+
+.bordo-tondo {
+  border-radius: 0.25rem;
+}
+
+.bordo-tondo-alto-sx {
+  border-top-left-radius: 0.5rem;
+}
+
+.bordo-tondo-alto-dx {
+  border-top-right-radius: 0.5rem;
+}
+
+.bordo-tondo-basso-sx {
+  border-bottom-left-radius: 0.5rem;
+}
+
+.bordo-tondo-basso-dx {
+  border-bottom-right-radius: 0.5rem;
+}
+
+.bordo-rotondo {
+  border-radius: 100%;
+}
+
+input.elemento-input {
+  background: #ccc;
+  box-shadow: unset;
+  border: none;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  max-width: 13rem;
+}
+
+input.elemento-input:last-child {
+  margin-right: 0;
+}
+
+.fissato-alto {
+  z-index: 1050;
+  position: static;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.allinea-centro {
+  text-align: center;
+}
+
+.allinea-destra,
+.allinea-dx {
+  text-align: right;
+}
+
+.allinea-sinistra,
+.allinea-sx {
+  text-align: left;
+}
+
+.d-sx {
+  justify-content: flex-start;
+}
+
+.d-dx {
+  justify-content: flex-end;
+}
+
+a.bottone:hover {
+  color: #fff;
+  transition: all 500ms ease;
+  opacity: 0.95;
+}
+
+a.bottone_c:hover {
+  color: #f6b6e3;
+  transition: all 500ms ease;
+  opacity: 0.95;
+}
+
+.foto {
+  height: 100px;
+  width: 100px;
+}
+
+#nome_pianta {
+  font-weight: bold;
+}
+
+#necessita {
+  font-weight: bold;
+}
+
+.terreno {
+  border-style: solid;
+  border-color: rgb(108, 59, 10);
+  border-width: 15px;
+  background-color: #c4a573;
+  border-radius: 5%;
+  height: 180px;
+}

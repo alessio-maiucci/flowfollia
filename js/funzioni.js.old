@@ -1,0 +1,413 @@
+function crea_http_req() {
+    var req = false;
+    if (typeof XMLHttpRequest != "undefined")
+        req = new XMLHttpRequest();
+    if (!req && typeof ActiveXObject != "undefined") {
+        try {
+            req=new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e1) {
+            try {
+                req=new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e2) {
+                try {
+                    req=new ActiveXObject("Msxml2.XMLHTTP.4.0");
+                } catch (e3) {
+                    req=null;
+                }
+            }
+        }
+    }
+ 
+    if(!req && window.createRequest)
+        req = window.createRequest();
+ 
+    if (!req) alert("Il browser non supporta AJAX");
+ 
+    return req;
+ }
+ 
+ // l'oggetto per comunicare con il server
+ var http_req = crea_http_req();
+ 
+ // invia i dati del form al server
+ function invia_login(username,password) {
+    var dati_post = "username=" + encodeURIComponent( username ) +
+                    "&password=" + encodeURIComponent( password );
+ 
+    http_req.onreadystatechange = gestisci_risposta;
+    http_req.open('POST', 'service/login.php', true);
+    http_req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    http_req.setRequestHeader("Content-length", dati_post.length);
+    http_req.setRequestHeader("Connection", "close");
+    http_req.send(dati_post);
+ }
+ 
+ // recupero e gestisco la risposta inviata dal server
+ function gestisci_risposta() {
+    if(http_req.readyState == 4) {
+        var esito = http_req.responseText;
+        switch (esito) {
+          case '1':
+            alert('username non presente nel sistema');
+          break;
+ 
+          case '2':
+            alert('password errata');
+          break;
+ 
+          case '3':
+            alert('username o password non inserite');
+          break;
+ 
+          case '4':
+            alert('login effettuato correttamente');
+            $('#id_span_login').addClass('hideme');
+            $('#id_span_registrati').addClass('hideme');
+            $('#id_span_loggato').removeClass('hideme');
+            $('#id_span_logout').removeClass('hideme');
+            chiudi_modal_login();
+          break;
+ 
+          default:
+            alert('Risposta del server non riconosciuta: ' + esito);
+        }
+    }
+ }
+
+function apri_finestra(param) {
+    $('#id_slider_fioriere').addClass('hideme');
+    var immagine=document.getElementById('mostra_vaso');
+    if(param==='id_vaso_quadrato') {
+        immagine.src="./immagini/vaso_quadrato_alto.png";
+        $('#id_scelta_fioriera').removeClass('hideme');
+        $('#container_indietro').addClass('hideme');
+    }
+    if(param==='id_vaso_quadrato_grande') {
+        immagine.src="./immagini/vaso_quadrato_grande_alto.png";
+        $('#id_scelta_fioriera').removeClass('hideme');
+        $('#container_indietro').addClass('hideme');
+    }
+    if(param==='id_vaso_rettangolare') {
+        immagine.src="./immagini/vaso_rettangolare_alto.png";
+        $('#id_scelta_fioriera').removeClass('hideme');
+        $('#container_indietro').addClass('hideme');
+    }
+    if(param==='id_vaso_tondo_piccolo') {
+        immagine.src="./immagini/vaso_tondo_piccolo_alto.png";
+        $('#id_scelta_fioriera').removeClass('hideme');
+        $('#container_indietro').addClass('hideme');
+    }
+    if(param==='id_vaso_tondo_grande') {
+        immagine.src="./immagini/vaso_tondo_grande_alto.png";
+        $('#id_scelta_fioriera').removeClass('hideme');
+        $('#container_indietro').addClass('hideme');
+    }
+    
+}
+
+function login() {
+    var username=$("#id_username_login").val(); //deve prenderlo dal database
+    var password=$("#id_password_login").val(); //deve prenderlo dal database
+	invia_login(username,password);	
+}
+
+function apri_modal_login() {
+    $("#id_username_login").val("");
+    $("#id_password_login").val("");
+    $('#id_modal_login').modal("show");
+}
+
+function chiudi_modal_login() {
+    $('#id_modal_login').modal("hide");
+}
+
+function apri_modal_registrati() {
+    $("#id_nome_registrazione").val("");
+    $("#id_cognome_registrazione").val("");
+    $("#id_username_registrazione").val("");
+    $("#id_email_registrazione").val("");
+    $("#id_password_registrazione").val("");
+    $("#id_conferma_password_registrazione").val("");
+    $('#id_modal_registrazione').modal("show");
+}
+
+function chiudi_modal_registrati() {
+    $('#id_modal_registrazione').modal("hide");
+}
+
+function registrati() {
+    var nome=$("#id_nome_registrazione").val();
+    var cognome=$("#id_cognome_registrazione").val();
+    var username=$("#id_username_registrazione").val();
+    var email=$("#id_email_registrazione").val(); // Accede alla mail nel form (chiamato "registr")
+    var password=$("#id_password_registrazione").val(); // Accede alla password nel form (chiamato "registr")
+    var conferma_password=$("#id_conferma_password_registrazione").val(); // Accede alla conferma_password nel form (chiamato "registr")
+
+    // Controllo della presenza di nome e cognome e username
+    if (!nome || !cognome || !username) {
+        alert("Inserire i campi mancanti");
+        return false;
+    }
+
+    // Controllo della presenza della @ nell'email
+    if (email.indexOf("@") === -1) {
+        alert("L'email deve contenere il carattere @");
+        return false;
+    }
+
+    // Controllo della password
+    var regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*\-!\/$%&])[A-Za-z\d*\-!\/$%&]{4,}$/; // espressione per le varie indicazioni della password
+    if (!regexPassword.test(password)) {
+        alert("La password deve essere di almeno 4 caratteri e deve contenere almeno un simbolo (* - ! / $ % &), un numero, una lettera minuscola e una lettera maiuscola");
+        return false;
+    }
+
+    // Controllo che la password confermata sia uguale a quella iniziale
+    if (password != conferma_password){
+        alert("Errore nella ripetizione della password! Ricontrollare");
+        return false;
+    }
+
+    // Salva i dati nel localStorage
+    localStorage.setItem('cognome', cognome);
+    localStorage.setItem('nome', nome);
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+    localStorage.setItem('password', password);
+
+    // Reindirizza alla pagina principale
+    chiudi_modal_registrati();
+    
+}
+
+function apri_modal_info(param) {
+    var modalImg = document.getElementById('modal_img');
+    var modalTitle = document.getElementById('nome_pianta');
+    var modalInfo = document.getElementById('info_pianta');
+    var modalNecessita = document.getElementById('necessita');
+    if(param==='id_modal_agatea') {
+        modalImg.src="./immagini/fiori_vendere/agatea.jpg";
+        modalTitle.textContent="Agatea";
+        modalInfo.textContent="Si tratta di una pianta sempreverde ed è caratterizzata da fiori celesti/indaco, simili a quelli di una margherita che compaiono da maggio fino all'autunno. Viene chiamata comunemente Felicia.";
+        modalNecessita.textContent="Predilige esposizioni in pieno sole e irrigazioni regolari. Mal tollera gli inverni rigidi.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_anemone') {
+        modalImg.src="./immagini/fiori_vendere/anemone.jpg";
+        modalTitle.textContent="Anemone";
+        modalInfo.textContent="L'anemone è una pianta perenne che cresce in maniera spontanea in zone ombreggiate e un po' umide. Coltivabile sia in giardino che in vaso.";
+        modalNecessita.textContent="L’anemone preferisce luoghi ben illuminati, ma non direttamente esposti al sole. Resiste bene al freddo, ma non ama il caldo eccessivo.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_azalea') {
+        modalImg.src="./immagini/fiori_vendere/azalea.jpg";
+        modalTitle.textContent="Azalea";
+        modalInfo.textContent="L'Azalea è una pianta appartenente alla famiglia delle Ericacee, e rientra nel genere dei Rhododendron. Presenta i fusti sottili densamente ramificati, gli arbusti allungati e le foglie ovali di una tonalità verde scura, al tatto ruvide.";
+        modalNecessita.textContent="Teme il freddo intenso e gradisce terreni acidi e ricchi di sostanze organiche.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_begonia') {
+        modalImg.src="./immagini/fiori_vendere/begonie.jpg";
+        modalTitle.textContent="Begonia";
+        modalInfo.textContent="Le begonie sono piante ornamentali molto apprezzate per la bellezza di foglie e fiori. Il genere delle begonie include diverse varietà di specie decorative, tutte di facile coltivazione in giardino, balcone e terrazzo.";
+        modalNecessita.textContent="Si sviluppano a temperatura ambiente e resistono al caldo e al freddo. Vengono coltivate come annuali.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_bougainvillea') {
+        modalImg.src="./immagini/fiori_vendere/bougainvillea.jpg";
+        modalTitle.textContent="Bougainvillea";
+        modalInfo.textContent="La Bougainvillea è una pianta rampicante, originaria del sud America. La Bouganville è la pianta perfetta per decorare pergolati, pareti, griglie o formare siepi alte fino a 5 metri.";
+        modalNecessita.textContent=" Può essere coltivata in piena terra in giardino, soltanto nelle zone in cui la temperatura non scende sotto lo zero";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_calla') {
+        modalImg.src="./immagini/fiori_vendere/calle.jpg";
+        modalTitle.textContent="Calla";
+        modalInfo.textContent="La Calla è una pianta perenne originaria dell’Africa meridionale. È conosciuta per i suoi fiori eleganti e distintivi, spesso utilizzati in bouquet da sposa o come decorazioni per eventi speciali. ";
+        modalNecessita.textContent="La Calla preferisce un terreno drenato e ricco di sostanze organiche. Preferisce luoghi luminosi ma non direttamente esposti ai raggi solari.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_callistemone') {
+        modalImg.src="./immagini/fiori_vendere/callistemone.jpg";
+        modalTitle.textContent="Callistemone";
+        modalInfo.textContent="Cresce in forma arrotondata e si presenta caratterizzata da foglie lanceolate rigide, di colore verde scuro. Quando fiorisce, i suoi fiori rossi appaiono come spighe cilindriche.";
+        modalNecessita.textContent="La resistenza a temperature estreme lo rende una pianta davvero unica. Deve essere irrigato abbondantemente durante le stagioni più calde.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_camelia') {
+        modalImg.src="./immagini/fiori_vendere/camelie.jpg";
+        modalTitle.textContent="Camelia";
+        modalInfo.textContent="La camelia è una pianta sempreverde, originaria dell'Asia. Può vantare moltissime specie diverse. In generale tutte le camelie sono a portamento arbustivo o ad alberello.";
+        modalNecessita.textContent="Il substrato più adatto la camelia è caratterizzato da un pH acido o almeno neutro. È consigliabile per un terriccio specifico per piante acidofile";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_carpobrotus') {
+        modalImg.src="./immagini/fiori_vendere/carpobrotus.jpg";
+        modalTitle.textContent="Carpobrotus";
+        modalInfo.textContent="È un genere di piante rampicanti o semi-erette, con grandi fiori simili a margherite. Appartiene alla famiglia delle Aizoaceae ed è originario principalmente del Sudafrica.";
+        modalNecessita.textContent="In estate, è necessario evitare una luce troppo forte. Inoltre, è necessario evitare la luce solare diretta dopo l'irrigazione poiché ciò brucerà le foglie.";
+        $('#id_modal_info').modal("show");
+        
+    }
+    if(param==='id_modal_ciclamini') {
+        modalImg.src="./immagini/fiori_vendere/ciclamini.jpg";
+        modalTitle.textContent="Ciclamino";
+        modalInfo.textContent="Il ciclamino si adatta benissimo sia in piena terra che in vaso, fioriere o ciotole. Ha dato origine a innumerevoli ibridi molto robusti e generosi, con fioritura lunghissima, anche 4 mesi";
+        modalNecessita.textContent="Resiste molto bene alle basse temperature e preferisce ambienti esterni, in vaso o per terra.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_crisantemi') {
+        modalImg.src="./immagini/fiori_vendere/crisantemi.jpg";
+        modalTitle.textContent="Crisantemo";
+        modalInfo.textContent="Il crisantemo è fra i protagonisti delle fioriture in esterni dell'autunno o inizio inverno. Presenta molte tonalità e può avere sia fiori piccoli che più grandi tipo margherite.";
+        modalNecessita.textContent="Il crisantemo deve vivere in esterni. In pieno sole resiste anche a mezz’ombra, ma termina prima la fioritura. Il freddo non lo turba.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_dalia') {
+        modalImg.src="./immagini/fiori_vendere/dalia.jpg";
+        modalTitle.textContent="Dalia";
+        modalInfo.textContent="La dalia è una perenne tuberosa con foglie ovali e carnose. Il fiore generalmente composto da più file di petali allungati sovrapposti ma ne esitono di diverse forme e anche i colori sono svariati.";
+        modalNecessita.textContent="Preferisce un’esposizione soleggiata e climi caldi: sono molto delicate e soffrono il freddo. Il terreno deve essere drenante e ricco di sostanze nutritive.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_dipladenia') {
+        modalImg.src="./immagini/fiori_vendere/dipladenia.jpg";
+        modalTitle.textContent="Dipladenia";
+        modalInfo.textContent="La dipladenia è una bellissima pianta ornamentale che può essere coltivata in appartamento o in giardino. I fiori si sviluppano in primavera-estate e sono molto appariscenti.";
+        modalNecessita.textContent="Durante l’estate la si può tenere in casa ma d’inverno meglio spostarla su un balcone coperto. Il terreno deve essere ricco e ben drenato.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_gardenia') {
+        modalImg.src="./immagini/fiori_vendere/gardenie.jpg";
+        modalTitle.textContent="Gardenia";
+        modalInfo.textContent="Le Gardenie sono arbusti di dimensioni piccole o medie, sempreverdi, che producono grandi fiori bianchi o crema, intensamente profumati. Hanno grandi foglie di colore scuro, lucide e di forma ovale.";
+        modalNecessita.textContent="Può essere coltivata sia in appartamento che in giardino. È abituata a un clima non eccessivamente caldo e non troppo freddo.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_garofano') {
+        modalImg.src="./immagini/fiori_vendere/garofani.jpg";
+        modalTitle.textContent="Garofano";
+        modalInfo.textContent="Il garofano è una pianta erbacea perenne, è a forma di cespuglio con foglie strette e allungate, produce fiori a cinque petali, singoli o a mazzetto.";
+        modalNecessita.textContent="Amano il sole che stimola ricche fioriture. Se vengono posizionati in ombra non fioriscono. Tollerano l’inquinamento urbano e anche i venti salmastri. Sono indicati per i terrazzi.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_geranio') {
+        modalImg.src="./immagini/fiori_vendere/geranio.jpg";
+        modalTitle.textContent="Geranio";
+        modalInfo.textContent="Il geranio è una tra le più amate piante da balcone. Adorna ceste, vasi, fioriere pensili, aiuole fiorite o ciotole. Più l’esposizione è soleggiata, più lussureggiante sarà la fioritura. ";
+        modalNecessita.textContent="Desidera un terreno drenante ma fertile e ricco di sostanza organica con pH neutro. Preferisce la piena esposizione al sole.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_gerbera') {
+        modalImg.src="./immagini/fiori_vendere/gerbere.jpg";
+        modalTitle.textContent="Gerbera";
+        modalInfo.textContent="La Gerbera è una pianta che fiorisce durante tutta l’estate in bellissimi fiori colorati. E’ una pianta a portamento eretto perenne ideale da coltivare in vaso che può essere recisa per creare mazzi di fiori da regalare o da mettere in casa.";
+        modalNecessita.textContent="Desidera un terreno fertile con pH neutro. Preferisce un posizionamento in pieno sole.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_giglio') {
+        modalImg.src="./immagini/fiori_vendere/giglio.jpg";
+        modalTitle.textContent="Giglio";
+        modalInfo.textContent="Il giglio è un fiore sontuoso ma anche rustico e resta in terra dopo la fioritura. In vaso, diventa l’ornamento raffinato e profumato del terrazzo e balcone. Ottimo come fiore reciso.";
+        modalNecessita.textContent="Solo se ha molta luce il suo stelo diventa robusto per restare eretto, meglio ancora se aiutato magari da un tutore, come una canna sottile di bambù.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_girasole') {
+        modalImg.src="./immagini/fiori_vendere/girasole.jpg";
+        modalTitle.textContent="Girasole";
+        modalInfo.textContent="Il girasole deve il suo nome al caratteristico comportamento in cui l’inflorescenza è sempre orientata verso il sole. Presenta un fusto robusto con foglie ampie. È noto il suo impiego per la produzione di olio vegetale dai suoi semi.";
+        modalNecessita.textContent="Ha un’ ottima resistenza al freddo, ma si sviluppa soprattutto in zone dove regnano le estati calde.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_ibisco') {
+        modalImg.src="./immagini/fiori_vendere/ibisco.jpg";
+        modalTitle.textContent="Ibisco";
+        modalInfo.textContent="È una pianta a portamento arbustico, caratterizzata da fiori di colori sgargianti e di dimensioni considerevoli. Con i fiori essiccati di ibisco si prepara un infuso chiamato karkadè.";
+        modalNecessita.textContent="Ha bisogno di un luogo luminoso per poter fiorire abbondantemente. In estate può satre anche aperto. Fiorisce in zone calde.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_iris') {
+        modalImg.src="./immagini/fiori_vendere/iris.jpg";
+        modalTitle.textContent="Iris";
+        modalInfo.textContent="Hanno foglie lunghe e sottili e fiori chiamati giaggioli, composti da tre petali interni eretti e tre petali esterni ricadenti.";
+        modalNecessita.textContent="Non necessitano di particolari cure dopo averle messe a dimora. Il terriccio adatto alle Iris è un terreno normale non argilloso e soprattutto deve essere ben drenato e mantenuto il più asciutto possibile.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_lavanda') {
+        modalImg.src="./immagini/fiori_vendere/lavanda.jpg";
+        modalTitle.textContent="Lavanda";
+        modalInfo.textContent="La lavanda fiorisce in piena stagione estiva richiamando tantissime farfalle e altri insetti impollinatori. È una pianta aromatica dai mille benefici, utile per trattare numerosi disturbi e problemi di salute.";
+        modalNecessita.textContent="Richiede spazio per crescere. Non si deve esagerare con le innaffiature ed è preferibile piantarla al suolo.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_margherita') {
+        modalImg.src="./immagini/fiori_vendere/margherite.jpg";
+        modalTitle.textContent="Margerita";
+        modalInfo.textContent="Una piccolo arbusto che sviluppa fino a 1 metro di altezza. Forma cuscini densi di fiorellini dal colore acceso da inizio estate fino all’autunno con foglie frastagliate argentate.";
+        modalNecessita.textContent="Va annaffiata con moderazione e si devono evitare i ristagni d'acqua. Vive bene in zone soleggiate per almeno mezza giornata.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_orchidea') {
+        modalImg.src="./immagini/fiori_vendere/orchidea.jpg";
+        modalTitle.textContent="Orchidea";
+        modalInfo.textContent="Presenta una rosetta di foglie carnose dalla foglia ovale e allungata, da cui si sviluppano uno o più fusti su cui sbocciano numerosi fiori. Presenta molte varietà e colori.";
+        modalNecessita.textContent="Ama posizioni luminose non con sole diretto e luoghi arieggiati ma senza correnti di aria fredda. La cosa importante è fornire loro umidità.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_ortensia') {
+        modalImg.src="./immagini/fiori_vendere/ortensie.jpg";
+        modalTitle.textContent="Ortensia";
+        modalInfo.textContent="Esistono molte varietà di ortensie che differiscono per portamento e caratteristiche delle infiorescenze. Sono resistenti e presentano fiori che sono in grado di cambiare colore in base al pH del terreno e alla presenza di minerali.";
+        modalNecessita.textContent="Prediligono un luogo ventilato, in penombra. Devono essere protette dal sole diretto.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_passiflora') {
+        modalImg.src="./immagini/fiori_vendere/passiflora.jpg";
+        modalTitle.textContent="Passiflora";
+        modalInfo.textContent="La passiflora è una pianta erbacea perenne, rampicante e ramificata, che possiede uno stelo robusto e legnoso e dei fiori molto particolari. Nota in erboristeria e fitoterapia per le sue proprietà sedative.";
+        modalNecessita.textContent="Apprezza i luoghi protetti, soleggiati o parzialmente ombreggiati. Occorre anche un terreno ricco di sostanze nutritive e ben drenato.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_peonia') {
+        modalImg.src="./immagini/fiori_vendere/peonie.jpg";
+        modalTitle.textContent="Peonia";
+        modalInfo.textContent="Sono erbe o arbusti alte fino a circa 2 metri ed ancorate al suolo da radici tuberose. Fioriscono nei mesi di aprile e maggio producendo grandi fiori globosi profumati e molto vistosi.";
+        modalNecessita.textContent="Il luogo ideale per la peonia è un’aiuola in giardino soleggiata o in penombra. Hanno bisogno di spazio e non devono essere vicine alle radici di altre piante.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_rosa') {
+        modalImg.src="./immagini/fiori_vendere/rose.jpg";
+        modalTitle.textContent="Rosa";
+        modalInfo.textContent="Le piante di rosa presentano steli lunghi e ricchi di spine su cui su sviluppano piccole foglie seghettate. I fiori hanno un profumo inconfondibile, sono solitari o in gruppi, dai colori e dalle dimensioni più varie";
+        modalNecessita.textContent="Si sviluppano meglio in terra o in contenitori dalle dimensioni medio-grandi, in zone dal clima mite. Amano sole e penombra.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_tulipano') {
+        modalImg.src="./immagini/fiori_vendere/tulipani.jpg";
+        modalTitle.textContent="Tulipano";
+        modalInfo.textContent="È formato da un bulbo sotterraneo a cui si sviluppa uno stelo verde con foglie. Sono utilizzati per abbellire giardini, aiuole, terrazzi e balconi con i loro fiori colorati.";
+        modalNecessita.textContent="La coltivazione può avvenire in giardino o in vasi. I bulbi vanno annaffiati ogni due o tre giorni.";
+        $('#id_modal_info').modal("show");
+    }
+    if(param==='id_modal_viola') {
+        modalImg.src="./immagini/fiori_vendere/viole.jpg";
+        modalTitle.textContent="Viola";
+        modalInfo.textContent="Sono erbacee e presentano una rosetta di foglie basali picciolate e cuoriformi. I fiori delle violette hanno generalmente due petali che puntano verso l’alto e tre petali verso il basso.";
+        modalNecessita.textContent="Per coltivare le violette è possibile partire dai semi o da piccole piantine e la coltivazione può essere effettuata in piena terra.";
+        $('#id_modal_info').modal("show");
+    }
+
+     
+}
+
+function chiudi_modal_info() {
+    $('#id_modal_info').modal("hide");
+}
+
+function apri_modal_quantita() {
+    $('#id_modal_quantita').modal("show");
+}
+
+function chiudi_modal_quantita() {
+    $('#id_modal_quantita').modal("hide");
+}

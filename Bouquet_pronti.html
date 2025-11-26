@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>FlowFollia</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="./js/slick/slick.css">
+	<link rel="stylesheet" type="text/css" href="./assets/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./js/slick/slick-theme.css">
+	<link rel="stylesheet" type="text/css" href="./css/interno.css">
+	<link rel="stylesheet" type="text/css" href="./css/fioriere.css">
+	<script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="./js/jquery-3.7.1.min.js"></script>	
+	<script src="./js/slick/slick.js"></script>	
+	<script src="./js/funzioni.js"></script>
+  <script src="./js/dati.js"></script>
+
+    <style>
+      /* INIZIO Fix generale per rendere la pagina ad altezza 100% dello schermo e per far andare il footer in basso */
+      html,
+      body {
+        height: 100%;
+      }
+
+      /* Questa regola permette di abilitare la successiva */
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Questa regola spinge il footer in basso - se non avessimo messo display: flex sul body non sarebbe stato possibile applicarla */
+      .footer {
+        margin-top: auto;
+      }
+      /* FINE Fix generale per rendere la pagina ad altezza 100% dello schermo e per far andare il footer in basso */
+
+      /* INIZIO Fix nell'header */
+      .container-fluid.fissato-alto.header {
+        min-width: 0;
+        padding: 8px 12px;
+      }
+
+      .row.barra-intermedia {
+        justify-content: space-between;
+      }
+
+      .logo {
+        height: max-content;
+      }
+
+      .logo img {
+        object-fit: contain;
+        width: 40px;
+        height: 40px;
+      }
+
+      .row:after {
+        content: none;
+      }
+      /* FINE Fix nell'header */
+
+      /* INIZIO Fix nelle .column */
+      .column.side-sx,
+      .column.side-dx {
+        display: none;
+      }
+
+      .column.middle {
+        width: 100%;
+		    height:auto;
+      }
+
+      @media screen and (min-width: 1366px) {
+        .column.side-sx,
+        .column.side-dx {
+          display: block;
+          height: auto;
+        }
+
+        .column.middle {
+          width: 80%;
+		      height:auto;
+        }
+      }
+
+      .column {
+        height: max-content;
+      }
+      /* FINE Fix nelle .column */
+
+      /* INIZIO Riduciamo un pò il margine tra le slide */
+      .slick-slide {
+        margin: 0 6px;
+      }
+      /* FINE Riduciamo un pò il margine tra le slide */
+
+      /* INIZIO Facciamo vedere una frazione della slide successiva nella visuale mobile */
+      .slick-list {
+        padding: 0 20% 0 0;
+      }
+
+      @media screen and (min-width: 480px) {
+        .slick-list {
+          padding: 0;
+        }
+      }
+
+      /* FINE Facciamo vedere una frazione della slide successiva nella visuale mobile */
+    </style>
+
+    <style>
+        .container-fiori {
+            position: relative;
+            width: 140px; 
+            height: 140px; 
+            background-color: transparent;
+			      top: 23px;
+    		    left: 20px;
+        }
+
+        .button-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .button-fiori {
+            width: calc(49% - 2px);
+    		    height: calc(49% - 4px);
+            background-color: #906c42; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+
+		    .fiore-placeholder{
+			    background-image: url('./immagini/flower1.svg'); 
+			    background-repeat: no-repeat; 
+			    background-size: 35px; 
+			    background-position: 50%;
+		    }
+
+    </style>
+
+	<script>
+		var cp_butt;
+		var to_butt;
+		function allowDrop(ev) {
+		  ev.preventDefault();
+		}
+		
+		function drag(ev) {
+		  console.log('drag '+ev.target.id)
+		  //cp_butt=$('#'+ev.target.id).closest('button').html();
+		  cp_butt=$('#'+ev.target.id).attr('src');
+		  console.log('drag '+cp_butt);
+		  
+		//  ev.dataTransfer.setData("text", ev.target.id);
+		}
+		
+		function drop(ev) {
+		  console.log('drop '+ev.target.id);
+		  //$('#'+ev.target.id).attr('src',cp_butt);
+		  console.log(cp_butt);
+		  $('#'+ev.target.id).css('background-image',cp_butt);
+		  ev.preventDefault();
+		}
+
+	</script>
+	
+</head>
+
+<body>
+	<div class="container-fluid fissato-alto header" id="cg-header">
+        <div class="fade collapse show" id="nascondimenu">
+            <div class="row barra-intermedia">
+                <div class="col-auto cg-main-logo logo d-flex">
+                    <img src="./immagini/logo.png" height="70" width="70">
+                </div>
+                <div class="blocco-header bottoni-login" style="max-width: 18rem;">
+                    <div id="id_span_loggato" class="bottone bottone-login bottone-registrazione hideme" >
+                        <span style="color: white;">Benvenuto </span> <span id="id_span_username" style="color: white;">AA</span>
+                      </div>
+                    <button type="button" class="btn btn-primary mx-1 hideme" id="id_span_logout" style="background-color: #4f3a23; border:#4f3a23" onclick="logout()">Logout</button>	
+                    <button type="button" class="btn btn-primary mx-1" id="id_span_login" style="background-color: #4f3a23; border:#4f3a23" onclick="apri_modal_login()">Login</button>
+                    <button type="button" class="btn btn-primary mx-1" id="id_span_registrati" style="background-color: #4f3a23; border:#4f3a23" onclick="apri_modal_registrati()">Registrati</button>
+                    <a href="./Carrello.html">
+                        <button type="button" class="btn btn-primary mx-1 carrello" id="id_carrello" style="background-color: #4f3a23; border:#4f3a23;">
+                            <img src="./immagini/cart3.svg">
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+</div>
+
+	<div class="row">
+	<div class="column side-sx"></div>
+	<div class="column middle" style="background-color:#ffffff;">
+		<div class="row-5">
+			<div class="column side-sx-2"><img src="./immagini/ghirigoro_fioriera_sx.JPG" style="float:left;"></div>
+			<div class="column middle-2"><h2 style="margin-top: 20px; ">Bouquet pronti</h2></div>
+			<div class="column side-dx-2"><img src="./immagini/ghirigoro_fioriera_dx.JPG" style="float:right;"></div>
+		</div>
+        
+		<div id="id_slider_3" class="regular slider">
+      <!-- riempito dalle funzioni che gestiscono i dati -->
+    </div>
+        
+		<div class="barra-di-scelta justify-content-center">
+            <div class="container" id="container_indietro" style="text-align: center;">
+                <div class="col-auto">
+                    <a href="./CreaBouquet.html"><button type="button" class="btn btn-primary btn-sm mx-3" style="
+                              margin-top: 10px;
+                              margin-bottom: 10px;
+                              background-color: #3b2711;
+                              border: #3b2711;">
+                        Indietro
+                      </button></a>
+                  </div>
+            </div>
+          </div>
+	</div>
+
+	<script type="text/javascript">
+        $(document).ready(function () {
+          initDatiSlider();
+          fillSlider('id_slider_3',3);
+          initDatiInfo();          
+          checkLogin();
+          getcarrello();
+          $(".regular").slick({
+            dots: true,
+            infinite: true,
+            slidesToShow: 5,
+            slidesToScroll: 5,
+            responsive: [
+              {
+                breakpoint: 1366,
+                settings: {
+                  slidesToShow: 4,
+                  slidesToScroll: 4,
+                },
+              },
+              {
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3,
+                  slidesToScroll: 3,
+                },
+              },
+              {
+                breakpoint: 768,
+                settings: {
+                  slidesToShow: 2,
+                  slidesToScroll: 2,
+                },
+              },
+              {
+                breakpoint: 480,
+                settings: {
+                  dots: false,
+                  slidesToShow: 1,
+                  slidesToScroll: 1,
+                },
+              },
+            ],
+          });
+    
+          $(".regular1").slick({
+            dots: true,
+            infinite: true,
+            slidesToShow: 5,
+            slidesToScroll: 5,
+            responsive: [
+              {
+                breakpoint: 1366,
+                settings: {
+                  slidesToShow: 4,
+                  slidesToScroll: 4,
+                },
+              },
+              {
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3,
+                  slidesToScroll: 3,
+                },
+              },
+              {
+                breakpoint: 768,
+                settings: {
+                  slidesToShow: 2,
+                  slidesToScroll: 2,
+                },
+              },
+              {
+                breakpoint: 480,
+                settings: {
+                  dots: false,
+                  slidesToShow: 1,
+                  slidesToScroll: 1,
+                },
+              },
+            ],
+          });
+        });
+  </script>
+	</script>
+
+	<div class="column side-dx"></div>
+	</div>
+	<div class="footer">
+		<p><b>Alessio e Denise</b></p>
+		<p><b>numero di telefono:</b> 06-1234567 <b>email:</b> FlowFollia@gmail.com</p>
+	</div>
+
+	<!--modal-->
+	<div class="modal fade" id="id_modal_registrazione" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Registrazione</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+
+			<div class="modal-body" style="background-image: url('./immagini/form7.jpg');">
+				<form action="./php/registrazione.php" method="post" name="registr" style="text-align: center;">
+					<input type="text" name="cognome" size="30" maxlength="40" id="id_cognome_registrazione" placeholder="Cognome:" required><br><br>
+					<input type="text" name="nome" size="30" maxlength="30" id="id_nome_registrazione" placeholder="Nome:" required><br><br>
+					<input type="username" name="username" size="30" maxlength="15" id="id_username_registrazione" placeholder="Username:" required><br><br>
+					<input type="email" name="email" size="30" maxlength="30" id="id_email_registrazione" placeholder="Email:" required><br><br>
+					<input type="password" name="password" size="30" maxlength="20" id="id_password_registrazione" placeholder="Password:" required><br><br>
+					<input type="password" name="conferma_password" size="30" maxlength="20" id="id_conferma_password_registrazione" placeholder="Conferma Password:" required><br><br>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_registrazione_chiudi" onclick="chiudi_modal_registrati()">Chiudi</button>
+					<input type="submit" class="btn btn-primary" style="background-color: #006b20; border:#006b20" name="REGISTRATI" value="registrati">
+				</form>
+			</div>
+		  </div>
+		</div>
+	</div>
+
+  <div class="modal fade" id="id_modal_login" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="background-image: url('./immagini/form7.jpg')">
+          <form method="post" onsubmit="return login()" style="text-align: center;">
+            <!-- <form method="post" action="./php/login.php" style="text-align: center;"> -->
+            <input type="username" name="username" size="30" maxlength="15" id="id_username_login" placeholder="Username:" required><br><br>
+            <input type="password" name="password" size="30" maxlength="20" id="id_password_login" placeholder="Password:" required><br><br>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_login_chiudi" onclick="chiudi_modal_login()">Chiudi</button>
+            <input type="submit" class="btn btn-primary" style="background-color: #006b20; border:#006b20" name="LOGIN" value="Login">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- modal fiori -->
+    <div class="modal fade" id="id_modal_info" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">INFORMAZIONI PIANTA</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+  
+          <div id="id_modal_body_info" class="modal-body" style="background-color: white">
+            <!-- riempito dalla funzione fillinfo -->
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="id_info_chiudi"
+              onclick="chiudi_modal_info()">
+              Indietro
+            </button>
+            <a href="javascript:void()"><button type="button" class="btn btn-primary" style="background-color: #006b20; border: #006b20" onclick="inserisciFlowfolliaCarrello('D')">Aggiungi al carrello</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal alert per gestire errori al posto di alert -->
+    <div id="id_modal_alert" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title h4" id="mySmallModalLabel"><span id="id_modal_alert_titolo"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <span id="id_modal_alert_msg"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+</html>
